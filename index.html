@@ -1,0 +1,592 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vale Por una Cita Sorpresa</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* --- Variables de Color y Estilos Base --- */
+    :root {
+      --bg: #fff0f4;
+      --card: #ffffff;
+      --accent: #ff5c8a;
+      --muted: #6f6f6f;
+      --success: #25D366;
+      --font-family: 'Poppins', sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: var(--font-family);
+      background: linear-gradient(180deg, var(--bg) 0%, #ffffff 60%);
+      color: #222;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    /* Fondo decorativo con círculos suaves */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      background:
+        radial-gradient(circle at 10% 20%, rgba(255, 195, 220, 0.25) 0 80px, transparent 81px),
+        radial-gradient(circle at 80% 10%, rgba(255, 220, 230, 0.2) 0 90px, transparent 91px),
+        radial-gradient(circle at 60% 70%, rgba(255, 200, 218, 0.2) 0 70px, transparent 71px),
+        radial-gradient(circle at 30% 80%, rgba(255, 180, 200, 0.18) 0 60px, transparent 61px),
+        radial-gradient(circle at 85% 60%, rgba(255, 210, 225, 0.15) 0 100px, transparent 101px),
+        linear-gradient(180deg, var(--bg), #fff);
+      pointer-events: none;
+      filter: blur(6px);
+    }
+
+    /* --- Contenedor Principal y Tarjeta --- */
+    .wrap {
+      max-width: 720px;
+      width: 100%;
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: 24px;
+      box-shadow: 0 10px 35px rgba(0, 0, 0, 0.08);
+      overflow: hidden;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 45px rgba(0, 0, 0, 0.12);
+    }
+    
+    /* --- Encabezado --- */
+    header {
+      padding: 24px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .avatar {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 4px solid #fff;
+      box-shadow: 0 6px 24px rgba(0, 0, 0, 0.1);
+      flex-shrink: 0;
+      background-color: var(--bg);
+    }
+
+    h1 {
+      font-size: 22px;
+      font-weight: 700;
+    }
+
+    p.lead {
+      margin-top: 6px;
+      color: var(--muted);
+    }
+    
+    .heart-icon {
+      margin-left: auto;
+      display: inline-flex;
+      width: 48px;
+      height: 48px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, #ff8aa2, var(--accent));
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 24px;
+      transform: rotate(-10deg);
+      flex-shrink: 0;
+    }
+
+
+    /* --- Cupón --- */
+    .coupon {
+      margin: 0 24px;
+      padding: 20px;
+      border-radius: 16px;
+      background: linear-gradient(180deg, #fff 0%, #fff6f9 100%);
+      border: 1px dashed rgba(0, 0, 0, 0.08);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .coupon .code {
+      font-weight: 700;
+      color: var(--accent);
+      font-size: 18px;
+    }
+
+    .coupon .desc {
+      color: #444;
+    }
+
+    /* --- Botones de Acción --- */
+    .actions {
+      display: flex;
+      flex-direction: column; /* Botones en vertical */
+      gap: 16px;
+      padding: 24px;
+    }
+
+    .action-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 10px;
+    }
+
+    .btn {
+      padding: 14px;
+      border-radius: 14px;
+      border: none;
+      font-weight: 600;
+      font-size: 16px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-family: var(--font-family);
+    }
+    
+    .btn:disabled {
+        cursor: not-allowed;
+        opacity: 0.7;
+    }
+
+    .btn:hover:not(:disabled) {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    }
+
+    .btn:active:not(:disabled) {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    .btn-accept {
+      background: linear-gradient(90deg, var(--accent), #ff7aa0);
+      color: white;
+    }
+
+    .btn-decline {
+      background: transparent;
+      border: 1px solid #eee;
+      color: var(--muted);
+    }
+
+    .chibi-row {
+      display: none; /* Oculto por defecto */
+      justify-content: center;
+      margin-top: 12px;
+      max-height: 0;
+      opacity: 0;
+      transition: max-height 0.5s ease-out, opacity 0.5s ease-out, margin-top 0.5s ease-out;
+    }
+
+    .chibi-row.visible {
+        display: flex; /* Se muestra con JS */
+        max-height: 100px; /* Altura suficiente para la imagen */
+        opacity: 1;
+    }
+
+    .chibi-icon {
+      width: 100px;
+      height: 100px;
+      object-fit: contain;
+      border-radius: 12px;
+    }
+
+    /* --- Secciones de Contenido Adicional --- */
+    .intent, .propose-date {
+      padding: 24px;
+      border-top: 1px solid rgba(0, 0, 0, 0.05);
+      background: linear-gradient(180deg, rgba(255, 240, 245, 0.6), transparent);
+    }
+    .propose-date {
+      background: transparent;
+    }
+
+    h3, h4 {
+      margin: 0 0 12px;
+      font-weight: 600;
+    }
+
+    p, small {
+      line-height: 1.6;
+    }
+
+    /* --- Formulario --- */
+    form.schedule {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    form.schedule input,
+    form.schedule button {
+      padding: 12px;
+      border-radius: 12px;
+      border: 1px solid #eee;
+      font-family: var(--font-family);
+      font-size: 14px;
+    }
+
+    form.schedule input[type=date],
+    form.schedule input[type=time] {
+      flex: 1;
+      min-width: 130px;
+    }
+
+    form.schedule button[type=submit] {
+      background: var(--accent);
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-weight: 600;
+      transition: background 0.3s ease;
+    }
+    form.schedule button[type=submit]:hover {
+        background: #ff477a;
+    }
+
+    /* --- Pie de Página --- */
+    footer {
+      padding: 20px;
+      text-align: center;
+      font-size: 14px;
+      color: var(--muted);
+    }
+
+    /* --- Modal --- */
+    .modal {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0, 0, 0, 0.4);
+      z-index: 100;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
+
+    .modal.open {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .modal .box {
+      width: 90%;
+      max-width: 420px;
+      background: #fff;
+      border-radius: 18px;
+      padding: 24px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+      text-align: center;
+      transform: scale(0.95);
+      transition: transform 0.3s ease;
+    }
+    .modal.open .box {
+        transform: scale(1);
+    }
+
+    .modal h2 {
+      margin: 10px 0;
+      font-size: 24px;
+    }
+
+    .modal p {
+      color: #555;
+      margin-bottom: 20px;
+    }
+
+    #modalActions .btn, #modalActions .close {
+        border-radius: 12px;
+        padding: 12px 16px;
+        font-weight: 600;
+        font-size: 15px;
+    }
+
+    .close {
+      background: #f2f2f2;
+      border: none;
+      cursor: pointer;
+    }
+    .close:hover {
+        background: #e5e5e5;
+    }
+
+    /* --- Canvas de Confeti --- */
+    .confetti {
+      position: fixed;
+      pointer-events: none;
+      inset: 0;
+      z-index: 99;
+    }
+
+    /* --- Media Queries para Responsividad --- */
+    @media (max-width: 600px) {
+      h1 { font-size: 20px; }
+      header {
+        flex-direction: column;
+        text-align: center;
+      }
+      .heart-icon {
+        display: none;
+      }
+      .coupon { text-align: center; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <header>
+        <img class="avatar" src="https://img.freepik.com/vector-premium/linda-pareja-cerdos-dia-san-valentin-coche_547439-396.jpg?w=360" alt="Pareja de chanchitos adorables en un coche">
+        <div>
+          <h1>Vale Por una Cita Sorpresa</h1>
+          <p class="lead">Para: <strong id="toName">Heidy (señol bonito)</strong> — De: <strong id="fromName">Carlos</strong></p>
+        </div>
+        <div class="heart-icon" aria-hidden="true">❤</div>
+      </header>
+
+      <div class="coupon" role="region" aria-label="vale de cita">
+        <div>
+          <div class="code">VALE N.º 01: La mejor cita sorpresa</div>
+          <div class="desc">Con este vale puedes canjear la cita más bonita que me gustaría compartir contigo, donde habrá un bonito recuerdo a tu elección que te alegrará tu corazoncito y por ende el mío. ¡Vamos, di que sí!.</div>
+        </div>
+        <div style="text-align:right; margin-top: 10px;">
+          <small class="muted">Caduca: Nunca — Válido por una oportunidad</small>
+        </div>
+      </div>
+
+      <div class="actions">
+        <div class="action-wrapper">
+          <button class="btn btn-accept" id="btnAccept" type="button">Aceptar la Invitación</button>
+          <div class="chibi-row" id="accept-image-wrapper">
+            <!-- IMAGEN 1: CHANCHITO FELIZ -->
+            <img class="chibi-icon" src="https://www.shutterstock.com/image-vector/little-pig-chinese-new-year-600nw-1148198735.jpg" alt="Chanchito feliz celebrando">
+          </div>
+        </div>
+
+        <div class="action-wrapper">
+          <button class="btn btn-decline" id="btnDecline" type="button">Ahora no joven</button>
+          <div class="chibi-row" id="decline-image-wrapper">
+             <!-- IMAGEN 2: CHANCHITO TRISTE (NUEVA URL FUNCIONAL) -->
+            <img class="chibi-icon" src="https://img.freepik.com/vector-premium/cerdo-dibujos-animados-llorando-mientras-esta-sentado-ilustracion-vectorial-aislada-sobre-fondo-blanco_338371-1721.jpg" alt="Chanchito triste">
+          </div>
+        </div>
+      </div>
+
+      <div class="intent">
+        <h3>Mis intenciones</h3>
+        <p>Quisiera conocerte mejor, compartir risas y buenos momentos, y ver si entre los dos puede nacer algo bonito. Mi intención es ser siempre respetuoso, transparente y atento contigo. Si aceptas, me encantaría que esta primera cita sea especial, como punto de partida para crear recuerdos juntos.</p>
+      </div>
+
+      <div class="propose-date">
+        <h4>¿Te gustaría proponer una fecha?</h4>
+        <form class="schedule" id="scheduleForm">
+          <input type="date" id="dateInput" required>
+          <input type="time" id="timeInput" required>
+          <button type="submit">Proponer fecha</button>
+        </form>
+        <small style="display:block; margin-top:8px; color:var(--muted)">Al enviar se abrirá tu app de correo para enviar la propuesta.</small>
+      </div>
+
+      <footer>Hecho con intención y una pizca de nervios. 💫</footer>
+    </div>
+  </div>
+
+  <!-- Modal único que se reutiliza para todo -->
+  <div class="modal" id="modal">
+    <div class="box">
+      <h2 id="modalTitle">¡Título del Modal!</h2>
+      <p id="modalText">Texto del modal.</p>
+      <div id="modalActions" style="margin-top: 20px; display:flex; gap:10px; justify-content:center; flex-wrap:wrap">
+        <a id="sendWaBtn" href="#" target="_blank" class="btn" style="background:var(--success); color:white; text-decoration: none; display:none;">Enviar WhatsApp</a>
+        <button class="close" id="closeModal" type="button">Cerrar</button>
+      </div>
+    </div>
+  </div>
+
+  <canvas class="confetti" id="confettiCanvas"></canvas>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // --- DATOS PERSONALIZABLES ---
+      const fromName = 'Carlos';
+      const toName = 'Heidy (señol bonito)';
+      const whatsAppNumber = '+593991837813'; // Incluir código de país, sin espacios
+
+      // --- ELEMENTOS DEL DOM ---
+      const btnAccept = document.getElementById('btnAccept');
+      const btnDecline = document.getElementById('btnDecline');
+      const modal = document.getElementById('modal');
+      const closeModal = document.getElementById('closeModal');
+      const modalTitle = document.getElementById('modalTitle');
+      const modalText = document.getElementById('modalText');
+      const sendWaBtn = document.getElementById('sendWaBtn');
+      const scheduleForm = document.getElementById('scheduleForm');
+      const acceptImageWrapper = document.getElementById('accept-image-wrapper');
+      const declineImageWrapper = document.getElementById('decline-image-wrapper');
+
+      // --- LÓGICA DE INTERACCIÓN ---
+
+      // Evento para el botón ACEPTAR
+      btnAccept.addEventListener('click', () => {
+        acceptImageWrapper.classList.add('visible');
+        declineImageWrapper.classList.remove('visible');
+
+        const whatsAppMessage = `¡Hola ${fromName}! Acepto tu invitación para la cita. ¡Qué emoción! 😊💖`;
+        const whatsAppLink = `https://wa.me/${whatsAppNumber.replace(/\D/g,'')}?text=${encodeURIComponent(whatsAppMessage)}`;
+        
+        modalTitle.textContent = '¡Qué Alegría! 🎉';
+        modalText.textContent = `¡Genial! Has aceptado tener una cita sorpresa con ${fromName}. ¡Será increíble!`;
+        sendWaBtn.href = whatsAppLink;
+        sendWaBtn.style.display = 'inline-block';
+        
+        // Abrir el modal después de un breve instante para apreciar la imagen
+        setTimeout(() => {
+          modal.classList.add('open');
+          launchConfetti();
+        }, 500);
+      });
+
+      // --- LÓGICA MEJORADA PARA EL BOTÓN DECLINAR ---
+      let declineClicks = 0;
+      const declineMessages = [
+        "¿Estás segura?",
+        "No te noto convencida, piénsalo bien",
+        "Está bien, te perdiste la mejor cita"
+      ];
+
+      btnDecline.addEventListener('click', () => {
+        if (declineClicks < declineMessages.length) {
+            btnDecline.textContent = declineMessages[declineClicks];
+            
+            if (declineClicks === 2) {
+                // Estado final
+                declineImageWrapper.classList.add('visible');
+                acceptImageWrapper.classList.remove('visible');
+                btnDecline.disabled = true;
+                btnAccept.disabled = true;
+            }
+            
+            declineClicks++;
+        }
+      });
+      
+      // Evento para CERRAR el modal
+      closeModal.addEventListener('click', () => {
+        modal.classList.remove('open');
+        // Ocultar elementos específicos al cerrar
+        setTimeout(() => {
+          sendWaBtn.style.display = 'none';
+        }, 300); // Esperar a que la animación de cierre termine
+      });
+
+      // Evento para el formulario de proponer fecha
+      scheduleForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const date = document.getElementById('dateInput').value;
+        const time = document.getElementById('timeInput').value;
+
+        if (!date || !time) {
+            openModalSimple('Error', 'Por favor, selecciona una fecha y hora válidas.');
+            return;
+        }
+
+        const subject = encodeURIComponent(`Propuesta de cita de ${fromName}`);
+        const body = encodeURIComponent(`¡Hola!\n\nTe propongo que nuestra cita sea el ${date} a las ${time}.\n\n¿Qué te parece la idea?\n\nSaludos,\n${fromName}`);
+        window.location.href = `mailto:?subject=${subject}&body=${body}`;
+      });
+      
+      // --- FUNCIONES AUXILIARES ---
+
+      // Función para abrir un modal simple con un mensaje
+      function openModalSimple(title, text) {
+        modalTitle.textContent = title;
+        modalText.textContent = text;
+        sendWaBtn.style.display = 'none';
+        modal.classList.add('open');
+      }
+
+      // Función para lanzar el confeti
+      function launchConfetti() {
+        const canvas = document.getElementById('confettiCanvas');
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        let w = canvas.width = window.innerWidth;
+        let h = canvas.height = window.innerHeight;
+
+        const pieces = [];
+        const colors = ['#ff6b95', '#ffd166', '#7ee8fa', '#a0e7a0', '#ffb3c6'];
+        for (let i = 0; i < 150; i++) {
+          pieces.push({
+            x: Math.random() * w, y: -20,
+            dx: (Math.random() - 0.5) * 6, dy: Math.random() * 4 + 3,
+            color: colors[Math.floor(Math.random() * colors.length)],
+            r: Math.random() * 8 + 5, angle: Math.random() * 360,
+            spin: (Math.random() - 0.5) * 20
+          });
+        }
+
+        let animationId;
+        function update() {
+          ctx.clearRect(0, 0, w, h);
+          for (const p of pieces) {
+            p.x += p.dx; p.y += p.dy;
+            p.dy += 0.05; // Gravedad
+            p.angle += p.spin;
+
+            if (p.y > h + 20) {
+              p.x = Math.random() * w; p.y = -20;
+            }
+
+            ctx.save();
+            ctx.fillStyle = p.color;
+            ctx.translate(p.x, p.y);
+            ctx.rotate(p.angle * Math.PI / 180);
+            ctx.fillRect(-p.r / 2, -p.r / 2, p.r, p.r);
+            ctx.restore();
+          }
+          animationId = requestAnimationFrame(update);
+        }
+
+        // Inicia la animación y la detiene después de un tiempo
+        animationId = requestAnimationFrame(update);
+        setTimeout(() => {
+          cancelAnimationFrame(animationId);
+          ctx.clearRect(0, 0, w, h);
+        }, 5000);
+
+        window.addEventListener('resize', () => {
+          w = canvas.width = window.innerWidth;
+          h = canvas.height = window.innerHeight;
+        });
+      }
+    });
+  </script>
+</body>
+</html>
+
